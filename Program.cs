@@ -33,6 +33,7 @@ class Program
 
         Console.WriteLine($"The sum is {sum}");
 
+        // Problem 4
         // =====================================================
         //  Bug hunt: Study tracker
         // =====================================================
@@ -129,5 +130,184 @@ class Program
             }
             return weeks;
         }
+
+        //problem4
+        // Move each to-do menu option into its own method.
+        List<string> tasks = new List<string>();
+        List<bool> done = new List<bool>();
+        string choice = string.Empty;
+
+        do
+        {
+            Console.WriteLine("1. Add task");
+            Console.WriteLine("2. List tasks");
+            Console.WriteLine("3. Mark task as done");
+            Console.WriteLine("4. Exit");
+            Console.Write("Please select an option: ");
+            choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    AddTask(tasks, done);
+                    break;
+
+                case "2":
+                    ListTasks(tasks, done);
+                    break;
+
+                case "3":
+                    CompleteTask(tasks, done);
+                    break;
+
+                case "4":
+                    Console.WriteLine("Goodbye!");
+                    break;
+
+                default:
+                    Console.WriteLine("Please enter 1, 2, 3, or 4.");
+                    break;
+            }
+
+        } while (choice != "4");
+    }
+
+    static void AddTask(List<string> tasks, List<bool> done)
+    {
+        Console.Write("Please enter the task name: ");
+        string task = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(task))
+        {
+            Console.WriteLine("Task name cannot be empty.");
+        }
+        else
+        {
+            tasks.Add(task.Trim());
+            done.Add(false);
+            Console.WriteLine("Task added.");
+        }
+    }
+
+    static void ListTasks(List<string> tasks, List<bool> done)
+    {
+        if (tasks.Count == 0)
+        {
+            Console.WriteLine("No tasks yet.");
+        }
+        else
+        {
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                if (done[i] == true)
+                {
+                    Console.WriteLine($"{i + 1}. [x] {tasks[i]}");
+                }
+                else
+                {
+                    Console.WriteLine($"{i + 1}. [ ] {tasks[i]}");
+                }
+            }
+        }
+    }
+
+    static void CompleteTask(List<string> tasks, List<bool> done)
+    {
+        if (tasks.Count == 0)
+        {
+            Console.WriteLine("No tasks yet.");
+        }
+        else
+        {
+            Console.Write("Please enter the task number: ");
+            string input = Console.ReadLine();
+            int number;
+
+            if (!int.TryParse(input, out number))
+            {
+                Console.WriteLine("Please enter a valid number.");
+            }
+            else if (number < 1 || number > tasks.Count)
+            {
+                Console.WriteLine("Task number does not exist.");
+            }
+            else
+            {
+                done[number - 1] = true;
+                Console.WriteLine("Task marked as done.");
+            }
+        }
+
+        
+        //problem5
+        // Randomize animals and assign them to school groups.
+        string[] pettingZoo =
+        {
+            "alpacas", "capybaras", "chickens", "ducks", "emus", "geese",
+            "goats", "iguanas", "kangaroos", "lemurs", "llamas", "macaws",
+            "ostriches", "pigs", "ponies", "rabbits", "sheep", "tortoises"
+        };
+
+        PlanSchoolVisit("School A");
+        PlanSchoolVisit("School B", 3);
+        PlanSchoolVisit("School C", 2);
+
+        void PlanSchoolVisit(string schoolName, int groups = 6)
+        {
+            RandomizeAnimals();
+            string[,] group = AssignGroup(groups);
+            Console.WriteLine(schoolName);
+            PrintGroup(group);
+        }
+
+        void RandomizeAnimals()
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < pettingZoo.Length; i++)
+            {
+                int r = random.Next(i, pettingZoo.Length);
+
+                string temp = pettingZoo[r];
+                pettingZoo[r] = pettingZoo[i];
+                pettingZoo[i] = temp;
+            }
+        }
+
+        string[,] AssignGroup(int groups = 6)
+        {
+            string[,] result = new string[groups, pettingZoo.Length / groups];
+            int start = 0;
+
+            for (int i = 0; i < groups; i++)
+            {
+                for (int j = 0; j < result.GetLength(1); j++)
+                {
+                    result[i, j] = pettingZoo[start++];
+                }
+            }
+
+            return result;
+        }
+
+        void PrintGroup(string[,] group)
+        {
+            for (int i = 0; i < group.GetLength(0); i++)
+            {
+                Console.Write($"Group {i + 1}: ");
+
+                for (int j = 0; j < group.GetLength(1); j++)
+                {
+                    Console.Write($"{group[i, j]}  ");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+
+        
     }
 }
+
+
